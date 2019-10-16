@@ -1,0 +1,14 @@
+provisioner "remote-exec" {
+    inline = [
+      "sudo amazon-linux-extras enable nginx1.12",
+      "sudo yum -y install nginx",
+      "sudo systemctl start nginx",
+    ]
+  }
+  connection {
+    type     = "ssh"
+    user     = "ec2-user"
+    password = ""
+    private_key = "${file("~/.ssh/id_rsa")}"
+  }
+}
