@@ -1,14 +1,36 @@
+provider "aws" {
+ access_key ="${var.access_key}"
+ secret_key ="${var.secret_key}"
+ region ="${var.region}"
+}
+
+resource "aws_instance" "ss" {
+    ami ="ami-0b69ea66ff7391e80"
+    instance_type ="t2.micro"
+    subnet_id = "${var.subnet_id}"
+    key_name = "${var.key_name}"
+    security_groups = ["sg-03c85431d9e2b4e41"]
+    associate_public_ip_address = "true"
+    tags =  {
+        Name = "ss1"
+        owner = "sai"
+        purpose ="test"
+    }
+
 provisioner "remote-exec" {
     inline = [
       "sudo amazon-linux-extras enable nginx1.12",
       "sudo yum -y install nginx",
       "sudo systemctl start nginx",
     ]
-  }
-  connection {
+}
+ connection {
     type     = "ssh"
+    host = "self.public_ip"
     user     = "ec2-user"
     password = ""
-    private_key = "${file("~/.ssh/id_rsa")}"
+    private_key = "${file("~/.ssh/authorized_keys")}"
+
   }
 }
+
